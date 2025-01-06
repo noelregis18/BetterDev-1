@@ -1,4 +1,7 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 import CodePreview from "./appComponents/CodePreview"
 import FeatureSection from "./appComponents/FeatureSection"
 import Footer from "./appComponents/Footer"
@@ -8,6 +11,9 @@ import PricingSection from "./appComponents/PricingSection"
 import TestimonialsSection from "./appComponents/TestimonialSection"
 
 export default function Home() {
+
+  const router = useRouter();
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center bg-gray-950">
       <Navbar />
@@ -26,29 +32,21 @@ export default function Home() {
               mentor.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="bg-[#7C3AED] hover:bg-[#6D28D9]">
-                Start Free Trial
+              <Button 
+                size="lg" 
+                className="bg-[#7C3AED] hover:bg-[#6D28D9]"
+                onClick={() => router.push('/codeReview')}
+                >
+                Get Started
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-white border-gray-700 hover:bg-gray-900"
-              >
-                Watch Demo
-              </Button>
+              
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex -space-x-4">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full bg-gray-700"
-                  />
-                ))}
-              </div>
+              
               <p className="text-gray-400">
-                <span className="text-[#7C3AED] font-bold">5,000+</span>{" "}
-                developers trust BetterDev
+                Trusted by
+                {" "}<span className="text-[#7C3AED] font-bold">5,000+</span>{" "}
+                developers
               </p>
             </div>
           </div>
