@@ -27,11 +27,11 @@ export default function TestimonialsSection() {
   ]
 
   return (
-    <section className="py-20 px-6 bg-gray-950">
+    <section className="py-20 px-6 bg-[#02010a]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Loved by Developers
+            Loved by <span className="text-[#7C3AED]">Developers</span>
           </h2>
           <p className="text-xl text-gray-400">
             See what our users have to say about their experience with BetterDev

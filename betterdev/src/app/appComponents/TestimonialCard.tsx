@@ -15,7 +15,7 @@ export default function TestimonialCard({
   initials,
 }: TestimonialCardProps) {
   return (
-    <Card className="bg-[#1a1a1a] border-gray-800 p-6">
+    <Card className="bg-gray-900 border-2 border-[#7C3AED]/20 p-6">
       <div className="flex items-center gap-4 mb-4">
         <div className="w-12 h-12 rounded-full bg-[#7C3AED] flex items-center justify-center text-white font-semibold">
           {initials}

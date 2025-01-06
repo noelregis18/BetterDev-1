@@ -42,13 +42,13 @@ export default function PricingSection() {
   ]
 
   return (
-    <section className="py-20 px-6 bg-gray-950">
+    <section className="py-20 px-6 bg-[#02010a]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Simple, Transparent Pricing
+            Simple, Transparent <span className="text-[#7C3AED]">Pricing</span>
           </h2>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-gray-400/80">
             Choose the perfect plan for your development needs
           </p>
         </div>

@@ -20,7 +20,7 @@ export default function PricingCard({
   isPopular = false,
 }: PricingCardProps) {
   return (
-    <Card className={`relative bg-[#1a1a1a] border-gray-800 ${
+    <Card className={`relative bg-gray-900 border-gray-800 ${
       isPopular ? 'border-[#7C3AED]' : ''
     }`}>
       {isPopular && (

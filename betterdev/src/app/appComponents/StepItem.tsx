@@ -13,7 +13,7 @@ interface StepItemProps {
           <div className="absolute inset-0 rounded-full bg-[#7C3AED] opacity-20 blur-sm"></div>
         </div>
         
-        <div className="bg-[#1a1a1a] rounded-lg p-8">
+        <div className="bg-gray-900 rounded-lg p-8">
           <div className="text-[#7C3AED] mb-2">{step}</div>
           <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
           <p className="text-gray-400 text-lg">{description}</p>

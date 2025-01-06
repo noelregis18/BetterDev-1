@@ -15,21 +15,23 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center bg-gray-950">
+    <div className="min-h-screen w-full flex flex-col items-center bg-[#02010a]">
+      
       <Navbar />
 
       {/* HERO SECTION */}
-      <main className="h-full max-w-7xl container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h1 className="text-5xl font-bold text-white leading-tight">
-              Elevate Your Code With{" "}
-              <span className="text-[#7C3AED] block">AI-Powered Reviews</span>
+      <main className=" h-screen max-w-7xl flex items-center container mx-auto px-6">
+        <div className="h-full w-full flex flex-col justify-center items-center gap-12">
+          <div className="w-full flex flex-col justify-center items-center  space-y-8">
+            <h1 className="w-full flex flex-col justify-center items-center text-5xl font-bold text-white leading-tight">
+              Your Own Personal{" "}
+              {" "}
+              <br />
+              <span className="text-[#7C3AED]">AI Senior Engineer</span>
             </h1>
-            <p className="text-xl text-gray-400">
+            <p className="max-w-2xl text-center text-xl text-gray-400/80">
               Get instant, intelligent code reviews that help you write better,
-              cleaner, and more efficient code. Let AI be your personal code
-              mentor.
+              cleaner, and more efficient code. Let AI be your senior engineer.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
@@ -39,20 +41,18 @@ export default function Home() {
                 >
                 Get Started
               </Button>
-              
             </div>
-            <div className="flex items-center gap-4">
-              
+          </div>
+          <div className="mb-10 w-full max-w-xl">
+            <CodePreview />
+          </div>
+          <div className="flex items-center">
               <p className="text-gray-400">
                 Trusted by
                 {" "}<span className="text-[#7C3AED] font-bold">5,000+</span>{" "}
                 developers
               </p>
             </div>
-          </div>
-          <div className="lg:ml-auto w-full max-w-xl">
-            <CodePreview />
-          </div>
         </div>
       </main>
 

@@ -37,13 +37,13 @@ export default function FeatureSection() {
   ] as const
 
   return (
-    <section className="py-20 px-6 bg-gray-950">
+    <section className="py-20 px-6 bg-[#02010a]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Supercharge Your Development
+            <span className="text-[#7C3AED]">Supercharge</span> Your Development
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400/80 max-w-3xl mx-auto">
             Transform your coding experience with powerful AI-driven features designed
             to make you a better developer.
           </p>
