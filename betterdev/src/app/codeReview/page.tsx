@@ -12,6 +12,7 @@ import { Brain, Code2, Wand2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import axios from 'axios';
 
 const languages = {
   javascript: { name: 'JavaScript', extension: javascript() },
@@ -41,43 +42,40 @@ Welcome! I'll analyze your code and provide feedback on:
 
 Start writing code in the editor and click Analyze to get feedback!`);
 
-  const analyzeMockFeedback = () => {
+  const getCodeReview = async () => {
+
     if (code.trim() === '') {
       setFeedback('# Waiting for code input...');
       return;
     }
 
-    // This is a mock feedback - in a real app, this would call an AI service
-    const mockFeedback = `# Code Analysis
+    try {
 
-### Potential Issues Found
+      const codeFeedbackResponse = await axios.post(
+        "http://localhost:3000/api/review",
+        { userCode: code },
+      )
 
-1. **Code Style**
-   - Consider adding proper documentation
-   - Add type annotations for better maintainability
+      if( codeFeedbackResponse.status === 200 ){
+        console.log(codeFeedbackResponse.data);
+        setFeedback(codeFeedbackResponse.data);
+      }
+      else{
+        console.log("Error in the try part");
+      }
 
-### Suggested Improvements
+    } 
+    catch (error) {
+      console.error("Error while calling the API: ", error)  
+    }
 
-\`\`\`${selectedLanguage}
-// Example improved code
-function greet(name: string): string {
-  return \`Hello, ${name}!\`;
-}
-\`\`\`
-
-### Best Practices
-- Follow the Single Responsibility Principle
-- Add error handling for robust code
-- Consider edge cases`;
-
-    setFeedback(mockFeedback);
-  };
+  }
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* Left Panel - Code Editor */}
       <div className="w-1/2 border-r border-gray-700 flex flex-col">
-        <div className="p-4 bg-purple-900/40 border-b border-gray-700">
+        <div className="p-4 bg-[#02010a] border-b-2 border-gray-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Code2 className="w-5 h-5 text-blue-400" />
@@ -106,10 +104,10 @@ function greet(name: string): string {
             className="h-full"
           />
         </div>
-        <div className="p-2 flex justify-center items-center bg-purple-900/40 border-t border-gray-700">
+        <div className="p-2 flex justify-center items-center bg-[#02010a] border-t border-gray-700">
           <button
-            onClick={analyzeMockFeedback}
-            className="h-10 w-[30%] bg-[#7C3AED] hover:bg-[#7C3AED]/80 text-white font-semibold py-2 px-3 rounded-md transition-colors"
+            onClick={getCodeReview}
+            className="h-10 w-[30%] bg-[#7C3AED]/60 hover:bg-[#7C3AED]/80 text-white font-semibold py-2 px-3 rounded-md transition-colors"
           >
             Analyze Code
           </button>
@@ -118,14 +116,14 @@ function greet(name: string): string {
 
       {/* Right Panel - AI Feedback */}
       <div className="w-1/2 flex flex-col">
-        <div className="p-4 bg-purple-900/40 border-b border-gray-700">
+        <div className="p-4 bg-[#02010a] border-b-2 border-gray-800">
           <div className="flex items-center space-x-2">
             <Brain className="w-5 h-5 text-purple-400" />
             <h2 className="text-lg font-semibold">AI Feedback</h2>
             <Wand2 className="w-5 h-5 text-purple-400" />
           </div>
         </div>
-        <div className="flex-1 overflow-auto p-6 bg-purple-950/15">
+        <div className="flex-1 overflow-y-auto bg-[#02010a] " id='reviewDiv'>
         <ReactMarkdown
             className="prose prose-invert max-w-none"
             components={{
