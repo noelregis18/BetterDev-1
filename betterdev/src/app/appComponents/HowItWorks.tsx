@@ -22,7 +22,7 @@ export default function HowItWorks() {
             <StepItem
               step="Step 1"
               title="Upload Your Code"
-              description="Simply paste your code or connect your repository. BetterDev supports all major programming languages and frameworks."
+              description="Simply paste your code. BetterDev supports all major programming languages and frameworks."
             />
             
             <StepItem
