@@ -40,17 +40,24 @@ export async function POST(req: NextRequest) {
             - Provide suggestions if the code can be modularized or not.
             - Provide suggestions if the code can be optimized or not.
             - If the user is not using good variable names, provide suggestions on how to improve it, and provide some example variable names.
-            - Rate the overall code quality out of 10. This rating should be shown like 10 circles, out of which only those are filled which are equal to the rating.
-            - Finally, give a positive remark to the user.
+            - Rate the overall code quality out of 10.
+            - Finally, give a remark to the user.
             - If ${userCode} was already perfect, give a very good remark and compliment the user. If ${userCode} had some errors and mistakes, then also motivate by providing a positive feedback and not being rude.
 
-        For formatting, keep these things in mind:
-            - Use markdown all over the place.
+        For text and markdown formatting, keep these things in mind:
+            - Use markdown all over the place for text.
+            - For heading of every section, use # for h1 markdown, and end them with a ":" symbol.
+            - Every section should have a padding of 20px from the top and bottom.
+            - Give line breaks after each section. The content should be separated and easily readable to the human eye.
+            - The heading of every section should be bigger than the text under that section.
+            - The text under the heading should start with ### and it should be h3 markdown to make it smaller than the heading.
+            - After ending of every section, there should be space of 2 lines.
             - Use of headings and paragraphs should be perfect while providing the response to the user.
+
+        For code formatting, keep these things in mind:
+            - For providing code output, use code markdown, to highlight the code differently from text.
             - User proper syntax highlighting while providing code in the output.
-            - Use the following HTML elements: ${allowedHTMLElements.map((tagName) => `<${tagName}>`).join(', ')} 
             - Use 2 spaces for code indentation.
-            - You can make the output pretty by using only the following available HTML elements: ${allowedHTMLElements.map((tagName) => `<${tagName}>`).join(', ')}
             - Ensure code is clean, readable, and maintainable.
             - Adhere to proper naming conventions and consistent formatting.
 

@@ -7,6 +7,7 @@ import { python } from '@codemirror/lang-python';
 import { rust } from '@codemirror/lang-rust';
 import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java';
+import { go } from '@codemirror/lang-go';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { Brain, Code2, Wand2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -20,6 +21,7 @@ const languages = {
   typescript: { name: 'TypeScript', extension: javascript({ typescript: true }) },
   tsx: { name: 'TSX', extension: javascript({ jsx: true, typescript: true }) },
   python: { name: 'Python', extension: python() },
+  go : { name: "Golang", extension: go() },
   rust: { name: 'Rust', extension: rust() },
   cpp: { name: 'C++', extension: cpp() },
   java: { name: 'Java', extension: java() },
@@ -115,15 +117,15 @@ Start writing code in the editor and click Analyze to get feedback!`);
       </div>
 
       {/* Right Panel - AI Feedback */}
-      <div className="w-1/2 flex flex-col">
+      <div className=" w-1/2 flex flex-col">
         <div className="p-4 bg-[#02010a] border-b-2 border-gray-800">
           <div className="flex items-center space-x-2">
             <Brain className="w-5 h-5 text-purple-400" />
-            <h2 className="text-lg font-semibold">AI Feedback</h2>
-            <Wand2 className="w-5 h-5 text-purple-400" />
+            <h2 className="text-lg font-semibold">Feedback</h2>
+            {/* <Wand2 className="w-5 h-5 text-purple-400" /> */}
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto bg-[#02010a] " id='reviewDiv'>
+        <div className="p-4 flex-1 overflow-y-auto bg-[#02010a] " id='reviewDiv'>
         <ReactMarkdown
             className="prose prose-invert max-w-none"
             components={{
