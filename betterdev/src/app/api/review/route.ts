@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
             - Use markdown all over the place for text.
             - For heading of every section, use # for h1 markdown, and end them with a ":" symbol.
             - Every section should have a padding of 20px from the top and bottom.
-            - Give line breaks after each section. The content should be separated and easily readable to the human eye.
+            - After each section, press ENTER two times. The content should be separated and easily readable to the human eye.
+            - Don't use <br> tag for line breaks. They should not be visible.
             - The heading of every section should be bigger than the text under that section.
             - The text under the heading should start with ### and it should be h3 markdown to make it smaller than the heading.
             - After ending of every section, there should be space of 2 lines.
