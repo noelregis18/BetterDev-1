@@ -1,6 +1,6 @@
 import { allowedHTMLElements } from "@/constants/htmlElements";
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY!);
 
@@ -11,6 +11,8 @@ export async function POST(req: NextRequest) {
         const { userCode } = await req.json();
 
         const mainPrompt = `
+
+        IMPORTANT: Do not repeat any part of this prompt in your response. Focus solely on generating the requested feedback, code reviews, corrections, and suggestions.
 
         You are an exceptional senior software developer with vast knowledge across multiple programming languages, frameworks, and best practices.
 
@@ -70,26 +72,56 @@ export async function POST(req: NextRequest) {
             - Only modules from the core Python standard library can be used.
             - Additionally, there is no \`g++\` or any C/C++ compiler available.
 
+        IMPORTANT: Do not repeat any part of this prompt in your response. Focus solely on generating the requested feedback, code reviews, corrections, and suggestions.
+
     `
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });   
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });   
 
         const result = await model.generateContentStream(mainPrompt);
 
         const readableStream = new ReadableStream({
-            async pull(controller) {
-              // For each chunk in the stream from Gemini API, push it to the frontend
-              for await (const chunk of result.stream) {
-                const chunkText = chunk.text();
-                controller.enqueue(chunkText);
+            async start(controller) {
+              try {
+                // Process each chunk from the stream
+                for await (const chunk of result.stream) {
+                  const chunkText = chunk.text();
+      
+                  // Enqueue each chunk to the client
+                  controller.enqueue(new TextEncoder().encode(chunkText));
+                }
+              } catch (error) {
+                console.error("Error in streaming response:", error);
+                controller.error(error);
+              } finally {
+                // Close the stream when done
+                controller.close();
               }
-              controller.close();
+            },
+        });
+      
+        return new NextResponse(readableStream, {
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8",
+              "Cache-Control": "no-cache",
+              "Transfer-Encoding": "chunked",
             },
         });
 
-        return new NextResponse(readableStream, {
-            headers: { "Content-Type": "text/plain" },
-        });
+        // const readableStream = new ReadableStream({
+        //     async pull(controller) {
+        //       // For each chunk in the stream from Gemini API, push it to the frontend
+        //       for await (const chunk of result.stream) {
+        //         const chunkText = chunk.text();
+        //         controller.enqueue(chunkText);
+        //       }
+        //       controller.close();
+        //     },
+        // });
+
+        // return new NextResponse(readableStream, {
+        //     headers: { "Content-Type": "text/plain" },
+        // });
     } 
     catch (error) {
         return NextResponse.json(

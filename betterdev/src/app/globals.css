@@ -71,3 +71,86 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.code-editor .cm-content {
+  font-size: 16px;
+}
+
+.code-editor .cm-gutter {
+  font-size: 16px;
+}
+
+@media (max-width: 376px) {
+  .code-editor .cm-content {
+    font-size: 12px; 
+  }
+  .code-editor .cm-gutter {
+    font-size: 12px;
+  }
+}
+
+.loader-wrapper {
+  /* width: 100%;
+  height: 100%;
+  background-color: #242f3f; */
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  top: 50%;                       /******** <- Remove this line *********/
+  border: 4px solid #7C3AED;
+  animation: loader 2s infinite ease;
+}
+
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #7C3AED;
+  animation: loader-inner 2s infinite ease-in;
+}
+
+@keyframes loader {
+  0% { transform: rotate(0deg);}
+  25% { transform: rotate(180deg);}
+  50% { transform: rotate(180deg);}
+  75% { transform: rotate(360deg);}
+  100% { transform: rotate(360deg);}
+}
+
+@keyframes loader-inner {
+  0% { height: 0%;}
+  25% { height: 0%;}
+  50% { height: 100%;}
+  75% { height: 100%;}
+  100% { height: 0%;}
+}
+
+.scrollBarDesign::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scrollBarDesign::-webkit-scrollbar-thumb {
+  background: rgb(31,41,55); /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Round the edges of the thumb */
+}
+
+.scrollBarDesign::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color when hovering over the thumb */
+}
+
+.scrollBarDesign::-webkit-scrollbar-track {
+  background: black; /* Background of the scrollbar track */
+}
+
+/* For Firefox */
+.scrollBarDesign {
+  scrollbar-width: thin; /* "auto", "thin", or "none" */
+  scrollbar-color: rgb(31,41,55) black; /* Thumb color and track color */
+}
