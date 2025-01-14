@@ -48,7 +48,7 @@ Start writing code in the editor and click Analyze to get feedback!`);
 
   const getCodeReview = async () => {
 
-    setLoading(true);
+    // setLoading(true);
 
     if (code.trim() === '') {
       setFeedback('# Waiting for code input...');
@@ -57,38 +57,37 @@ Start writing code in the editor and click Analyze to get feedback!`);
 
     try {
 
-      const response = await fetch("http://localhost:3000/api/review", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      const response = await fetch("/api/review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userCode: code }),
+        body: JSON.stringify({ userCode: code }), // Ensure 'code' is defined
       });
-
-      if( !response ){
-        throw new Error("response not defined");
-      }
-
+      
       if (!response.ok) {
         throw new Error("Failed to fetch streamed feedback");
       }
-
+      
       const reader = response.body?.getReader();
       const decoder = new TextDecoder("utf-8");
       let result = "";
-
+      
+      if (!reader) {
+        throw new Error("Stream reader is not available");
+      }
+      
       while (true) {
-        const { done, value } = await reader!.read();
+        const { done, value } = await reader.read();
         if (done) {
           break;
         }
         const chunk = decoder.decode(value, { stream: true });
         result += chunk;
-
-        console.log(chunk);
+        // console.log(chunk);
+        setFeedback(result);
       }
-
-      setFeedback(result);
+      // setFeedback(result);
 
       setLoading(false);
 

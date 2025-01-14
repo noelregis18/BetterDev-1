@@ -1,8 +1,10 @@
 import { allowedHTMLElements } from "@/constants/htmlElements";
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold, } from "@google/generative-ai";
+import { Mistral } from '@mistralai/mistralai';
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY!);
+const apiKey = process.env.MISTRAL_API_KEY;
 
 export async function POST(req: NextRequest) {
 
@@ -13,6 +15,10 @@ export async function POST(req: NextRequest) {
         const mainPrompt = `
 
         IMPORTANT: Do not repeat any part of this prompt in your response. Focus solely on generating the requested feedback, code reviews, corrections, and suggestions.
+
+        IMPORTANT: The output data that you would be providing will be streamed, so while streaming make sure to have proper syntax highlighting if sending some code in the response.
+
+        IMPORTANT: The output data that you would be providing will be streamed, so while streaming make sure to send text in the form of Markdown in the response.
 
         You are an exceptional senior software developer with vast knowledge across multiple programming languages, frameworks, and best practices.
 
@@ -46,6 +52,15 @@ export async function POST(req: NextRequest) {
             - Finally, give a remark to the user.
             - If ${userCode} was already perfect, give a very good remark and compliment the user. If ${userCode} had some errors and mistakes, then also motivate by providing a positive feedback and not being rude.
 
+          <important>
+          For code formatting, keep these things in mind:
+            - For providing code output, use code markdown, to highlight the code differently from text.
+            - User proper syntax highlighting while providing code in the output.
+            - Use 2 spaces for code indentation.
+            - Ensure code is clean, readable, and maintainable.
+            - Adhere to proper naming conventions and consistent formatting.
+          </important>
+ 
         For text and markdown formatting, keep these things in mind:
             - Use markdown all over the place for text.
             - For heading of every section, use # for h1 markdown, and end them with a ":" symbol.
@@ -56,13 +71,6 @@ export async function POST(req: NextRequest) {
             - The text under the heading should start with ### and it should be h3 markdown to make it smaller than the heading.
             - After ending of every section, there should be space of 2 lines.
             - Use of headings and paragraphs should be perfect while providing the response to the user.
-
-        For code formatting, keep these things in mind:
-            - For providing code output, use code markdown, to highlight the code differently from text.
-            - User proper syntax highlighting while providing code in the output.
-            - Use 2 spaces for code indentation.
-            - Ensure code is clean, readable, and maintainable.
-            - Adhere to proper naming conventions and consistent formatting.
 
         Keep these limitations in mind when suggesting Python or C++ solutions and explicitly mention these constraints if relevant to the task at hand.
 
@@ -75,55 +83,69 @@ export async function POST(req: NextRequest) {
         IMPORTANT: Do not repeat any part of this prompt in your response. Focus solely on generating the requested feedback, code reviews, corrections, and suggestions.
 
     `
+    
+        const client = new Mistral({ apiKey: apiKey });
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });   
-
-        const result = await model.generateContentStream(mainPrompt);
-
-        const readableStream = new ReadableStream({
-            async start(controller) {
-              try {
-                // Process each chunk from the stream
-                for await (const chunk of result.stream) {
-                  const chunkText = chunk.text();
-      
-                  // Enqueue each chunk to the client
-                  controller.enqueue(new TextEncoder().encode(chunkText));
-                }
-              } catch (error) {
-                console.error("Error in streaming response:", error);
-                controller.error(error);
-              } finally {
-                // Close the stream when done
-                controller.close();
-              }
-            },
+        const result = await client.chat.stream({
+          model: "mistral-small-latest",
+          messages: [{ role: 'system', content: mainPrompt }],
         });
       
-        return new NextResponse(readableStream, {
-            headers: {
-              "Content-Type": "text/plain; charset=utf-8",
-              "Cache-Control": "no-cache",
-              "Transfer-Encoding": "chunked",
-            },
+        // Create a ReadableStream to send the data in chunks
+        const stream = new ReadableStream({
+          async start(controller) {
+            for await (const chunk of result) {
+              const streamText = chunk.data.choices[0].delta.content;
+              //@ts-ignore
+              controller.enqueue(new TextEncoder().encode(streamText)); 
+            }
+            controller.close(); // Close the stream once all data is sent
+          }
         });
+      
+        // Return the stream as the NextResponse
+        return new NextResponse(stream, {
+          headers: {
+            'Content-Type': 'text/plain; charset=utf-8', // Adjust the content type as needed
+          },
+        });
+
+
+        // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });   
+
+        // const result = await model.generateContentStream(mainPrompt);
 
         // const readableStream = new ReadableStream({
-        //     async pull(controller) {
-        //       // For each chunk in the stream from Gemini API, push it to the frontend
-        //       for await (const chunk of result.stream) {
-        //         const chunkText = chunk.text();
-        //         controller.enqueue(chunkText);
+        //     async start(controller) {
+        //       try {
+        //         // Process each chunk from the stream
+        //         for await (const chunk of result.stream) {
+        //           const chunkText = chunk.text();
+      
+        //           // Enqueue each chunk to the client
+        //           controller.enqueue(new TextEncoder().encode(chunkText));
+        //         }
+        //       } catch (error) {
+        //         console.error("Error in streaming response:", error);
+        //         controller.error(error);
+        //       } finally {
+        //         // Close the stream when done
+        //         controller.close();
         //       }
-        //       controller.close();
+        //     },
+        // });
+      
+        // return new NextResponse(readableStream, {
+        //     headers: {
+        //       "Content-Type": "text/plain; charset=utf-8",
+        //       "Cache-Control": "no-cache",
+        //       "Transfer-Encoding": "chunked",
         //     },
         // });
 
-        // return new NextResponse(readableStream, {
-        //     headers: { "Content-Type": "text/plain" },
-        // });
     } 
     catch (error) {
+        console.log("Error while generating code review", error);
         return NextResponse.json(
             {message: "Error while generating code review"},
             {status: 500}
