@@ -21,8 +21,3 @@ Building an AI Senior Engineer for all those developers who are afraid of those 
 5. Add your `API_KEY` inside this file.
 6. Run `npm run dev` to run the project on your localhost.
 
-### Troubleshooting:
-For any kind of help or troubleshooting, feel free to reach out to me:
-1. Email: poswalsameer2003@gmail.com
-2. Linkedin: [Sameer Poswal](https://www.linkedin.com/in/sameerposwal/)
-3. Twitter: [Sameer Poswal](https://twitter.com/sameerposwal03)
